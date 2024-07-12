@@ -31,4 +31,6 @@ class User(db.Model):
                           nullable=False,
                           default=default_profile_img)
     
-    
+    def full_name(self):
+        """ Returns full name of users """
+        return f'{self.first_name} {self.last_name}'
