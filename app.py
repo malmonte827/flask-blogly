@@ -37,6 +37,8 @@ def new_user_form():
 
 @app.route('/users/new', methods=['POST'])
 def create_user():
+    """ Handles form submission to create new user """
+
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     image_url = request.form['image_url']
@@ -49,16 +51,22 @@ def create_user():
 
 @app.route( '/<int:user_id>' ) 
 def show_user_details(user_id):
+    """ Shows info on a specific user """
+
     user = User.query.get_or_404(user_id)
     return render_template('user-detail.html', user=user)
 
 @app.route('/users/<int:user_id>/edit')
 def edit_user(user_id):
+    """  Shows a form to edit user info """
+
     user = User.query.get_or_404(user_id)
     return render_template('edit-user.html', user=user)
 
 @app.route('/users/<int:user_id>/edit', methods=['POST'])
 def update_user(user_id):
+    """ handles form submission to update user info """
+
     user = User.query.get_or_404(user_id)
     user.first_name = request.form['first_name']
     user.last_name = request.form['last_name']
@@ -71,6 +79,8 @@ def update_user(user_id):
 
 @app.route('/users/<int:user_id>/delete', methods=['POST'])
 def delete_user(user_id):
+    """ Handles form submission to delete a user """
+
     user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
