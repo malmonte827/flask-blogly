@@ -8,27 +8,19 @@
 
 <form method="POST">
     
-    <div>
+    <div class="form-group">
         <label for="first_name">First Name</label>
-        <div>
-            <input type="text" name="first_name" id="first_name" value="{{user.first_name}}">
-        </div>
+        <input type="text" name="first_name" id="first_name" value="{{user.first_name}}">
     </div>
-    <div>
+    <div class="form-group">
         <label for="last_name">Last Name</label>
-        <div>
-            <input type="text" name="last_name" id="last_name" value="{{user.last_name}}">
-        </div>
+        <input type="text" name="last_name" id="last_name" value="{{user.last_name}}">
     </div>
-    <div>
+    <div class="form-group">
         <label for="image_url">Image URL</label>
-        <div>
-            <input type="text" name="image_url" id="image_url" value="{{user.image_url}}">
-        </div>
+        <input type="text" name="image_url" id="image_url" value="{{user.image_url}}">
     </div>
-    <div>
-        <button onclick="location.href='/users'"" type="button">Cancel</button>
-        <button type="submit">Save</button>
-    </div>
+        <button class="btn btn-secondary" onclick="location.href='/users'"" type="button">Cancel</button>
+        <button class="btn btn-success" type="submit">Save</button>
 </form>
 {% endblock %}

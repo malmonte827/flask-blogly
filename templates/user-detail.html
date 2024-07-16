@@ -5,6 +5,8 @@ block content %}
     <img
         src="{{user.image_url}}"
         alt="{{user.full_name()}}'s profile picture "
+        height="40"
+        width="40"
     />
 </div>
 
@@ -12,11 +14,12 @@ block content %}
     <h1>{{user.full_name()}}</h1>
 
     <form>
-        <button formaction="/users/{{user.id}}/edit" formmethod="GET">
+        <button class="btn btn-primary" formaction="/users/{{user.id}}/edit" formmethod="GET">
             Edit
         </button>
 
         <button
+            class="btn btn-danger"
             formaction="/users/{{user.id}}/delete
 "
             formmethod="POST"
@@ -25,4 +28,13 @@ block content %}
         </button>
     </form>
 </div>
+
+<h2>Posts</h2>
+
+<ul>
+    {% for post in user.posts %}
+    <li><a href="/posts/{{post.id}}">{{post.title}}</a></li>
+    {% endfor %}
+</ul>
+
 {% endblock %}
