@@ -6,8 +6,19 @@
 <h1>{{tag.name}}</h1>
 
 <ul>
-   
-    <li><a href="">{{tag.posts.}}</a></li>
-   
+   {% for post in tag.posts %}
+    <li><a href="/posts/{{post.id}}"></a>{{post.title}}</li>
+   {% endfor %}
 </ul>
+
+<form>
+    <button class="btn btn-primary"
+            formaction="/tags/{{tag.id}}/edit"
+            formmethod="GET">
+            Edit</button>
+
+    <button class="btn btn-danger"
+            formaction="/tags/{{tag.id}}/delete"
+            formmethod="POST">Delete</button>
+</form>
 {% endblock %}

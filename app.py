@@ -170,3 +170,10 @@ def show_tag_detail(tag_id):
 
     tag = Tag.query.get_or_404(tag_id)
     return render_template('/tags/detail.html', tag=tag)
+
+@app.route('/tags/new')
+def show_new_tag_form():
+    """ Shows form to create new tag """
+
+    posts = Post.query.all()
+    return render_template('tags/new-tag.html', posts=posts)
