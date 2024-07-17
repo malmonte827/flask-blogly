@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, render_template, redirect, request
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -30,13 +30,13 @@ def show_users():
     """ Shows all users """
 
     users = User.query.all()
-    return render_template('users-list.html', users=users)
+    return render_template('users/users-list.html', users=users)
 
 @app.route('/users/new')
 def new_user_form():
     """ Shows a form to add new users """
 
-    return render_template('create-user.html')
+    return render_template('users/create-user.html')
 
 @app.route('/users/new', methods=['POST'])
 def create_user():
@@ -56,14 +56,14 @@ def show_user_details(user_id):
     """ Shows info on a specific user """
 
     user = User.query.get_or_404(user_id)
-    return render_template('user-detail.html', user=user)
+    return render_template('users/user-detail.html', user=user)
 
 @app.route('/users/<int:user_id>/edit')
 def edit_user(user_id):
     """  Shows a form to edit user info """
 
     user = User.query.get_or_404(user_id)
-    return render_template('edit-user.html', user=user)
+    return render_template('users/edit-user.html', user=user)
 
 @app.route('/users/<int:user_id>/edit', methods=['POST'])
 def update_user(user_id):
@@ -99,7 +99,7 @@ def show_new_post_form(user_id):
     """ Shows a form to add new post """
 
     user = User.query.get_or_404(user_id)
-    return render_template('new-post.html', user=user)
+    return render_template('posts/new-post.html', user=user)
 
 @app.route('/users/<int:user_id>/posts/new', methods=['POST'])
 def new_post(user_id):
@@ -121,14 +121,14 @@ def show_post(post_id):
     """ Shows post of specific user """
 
     post = Post.query.get_or_404(post_id)
-    return render_template('user-post.html', post=post)
+    return render_template('posts/user-post.html', post=post)
 
 @app.route('/posts/<int:post_id>/edit')
 def edit_post(post_id):
     """ Shows a form to edit post """
 
     post = Post.query.get_or_404(post_id)
-    return render_template('edit-post.html', post=post)
+    return render_template('posts/edit-post.html', post=post)
 
 @app.route('/posts/<int:post_id>/edit', methods=['POST'])
 def update_post(post_id):
@@ -153,3 +153,20 @@ def delete_post(post_id):
     db.session.commit()
 
     return redirect(f'/users/{post.user_id}')
+
+############################################################################################
+# Tag Routes
+
+@app.route('/tags')
+def show_tags():
+    """ Shows list of tags """
+
+    tags = Tag.query.all()
+    return render_template('tags/show.html', tags=tags)
+
+@app.route('/tags/<int:tag_id>')
+def show_tag_detail(tag_id):
+    """ show posts associated with tag """
+
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template('/tags/detail.html', tag=tag)
