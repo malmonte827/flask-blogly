@@ -13,7 +13,7 @@ def connect_db(app):
     db.init_app(app)
 
 class User(db.Model):
-    """ User """
+    """ website User """
 
     __tablename__ = 'users'
 
@@ -38,7 +38,7 @@ class User(db.Model):
         return f'{self.first_name} {self.last_name}'
     
 class Post(db.Model):
-    """ Post """
+    """ Post on website """
 
     __tablename__ = 'posts'
 
@@ -55,3 +55,34 @@ class Post(db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.id'),
                         nullable=False)
+    
+
+class Tag(db.Model):
+    """ Tag """
+
+    __tablename__ = 'tags'
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+    name = db.Column(db.Text,
+                     nullable=False,
+                     unique=True)
+    
+    posts = db.relationship('Post',
+                            secondary='posts_tags',
+                            backref='tags')
+    
+
+class PostTag(db.Model):
+    """ Tag on a post """
+
+    __tablename__ = 'posts_tags'
+
+    post_id = db.Column(db.Integer,
+                        db.ForeignKey('posts.id'),
+                        primary_key=True)
+    
+    tag_id = db.Column(db.Integer,
+                       db.ForeignKey('tags.id'),
+                       primary_key=True)
