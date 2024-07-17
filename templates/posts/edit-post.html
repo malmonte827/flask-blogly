@@ -6,13 +6,22 @@
 
 <h1>Edit Post</h1>
 <form method="POST" action="/posts/{{post.id}}/edit">
+
     <div class="form-group">
         <label for="title">Title</label>
         <input type="text" name="title" id="title" value="{{post.title}}">
     </div>
+
     <div class="form-group">
         <label for="content">Content</label>
         <textarea type="text" name="content" id="content">{{post.content}}</textarea>
+    </div>
+
+    <div>
+        {% for tag in tags %}
+        <input type="checkbox" name="tags" id="tag_{{tag.id}}" value="{{tag.id}}">
+         <label for="tag_{{tag.id}}">{{tag.name}}</label>
+        {% endfor %}
     </div>
     <button onclick="location.href='/users/{{post.user.id}}'" type="button" class="btn btn-outline-primary">Cancel</button>
 

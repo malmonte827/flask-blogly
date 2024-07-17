@@ -99,17 +99,21 @@ def show_new_post_form(user_id):
     """ Shows a form to add new post """
 
     user = User.query.get_or_404(user_id)
-    return render_template('posts/new-post.html', user=user)
+    tags = Tag.query.all()
+    return render_template('posts/new-post.html', user=user, tags=tags)
 
 @app.route('/users/<int:user_id>/posts/new', methods=['POST'])
 def new_post(user_id):
     """ Handles form submission for new post """
 
     user = User.query.get_or_404(user_id)
+    tag_ids = [int(num) for num in request.form.getlist('tags')]
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
     new_post = Post(
     title = request.form['title'],
     content = request.form['content'],
-    user=user)
+    user=user,
+    tags=tags)
 
     db.session.add(new_post)
     db.session.commit()
@@ -128,7 +132,8 @@ def edit_post(post_id):
     """ Shows a form to edit post """
 
     post = Post.query.get_or_404(post_id)
-    return render_template('posts/edit-post.html', post=post)
+    tags = Tag.query.all()
+    return render_template('posts/edit-post.html', post=post, tags=tags)
 
 @app.route('/posts/<int:post_id>/edit', methods=['POST'])
 def update_post(post_id):
@@ -137,6 +142,9 @@ def update_post(post_id):
     post = Post.query.get_or_404(post_id)
     post.title = request.form['title']
     post.content = request.form['content']
+
+    tag_ids = [int(num) for num in request.form.getlist('tags')]
+    post.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
 
     db.session.add(post)
     db.session.commit()
@@ -177,3 +185,54 @@ def show_new_tag_form():
 
     posts = Post.query.all()
     return render_template('tags/new-tag.html', posts=posts)
+
+@app.route('/tags/new', methods=['POST'])
+def new_tag():
+    """ Handles submission for creating new tag """
+
+    post_ids = [int(num) for num in request.form.getlist('posts')]
+    posts = Post.query.filter(Post.id.in_(post_ids)).all()
+    new_tag = Tag(name=request.form['name'],posts=posts)
+
+    db.session.add(new_tag)
+    db.session.commit()
+
+    return redirect('/tags')
+
+@app.route('/tags/<int:tag_id>/edit')
+def edit_form(tag_id):
+    """ Shows form to edit tag """
+
+    tag = Tag.query.get_or_404(tag_id)
+    posts = Post.query.all()
+    
+    db.session.add(tag)
+    db.session.commit()
+
+    return render_template('/tags/edit-tag.html', tag=tag, posts=posts)
+
+@app.route('/tags/<int:tag_id>/edit', methods=['POST'])
+def update_tag(tag_id):
+    """ Handles submission of updated tag """
+
+    tag = Tag.query.get_or_404(tag_id)
+    tag.name = request.form['name']
+    post_ids = [int(num) for num in request.form.getlist("posts")]
+    tag.posts = Post.query.filter(Post.id.in_(post_ids)).all()
+
+    db.session.add(tag)
+    db.session.commit()
+
+    return redirect('/tags')
+
+@app.route('/tags/<int:tag_id>/delete', methods=['POST'])
+def delete_tag(tag_id):
+
+    """ Handles submission for deleting a tag """
+
+    tag = Tag.query.get_or_404(tag_id)
+
+    db.session.delete(tag)
+    db.session.commit()
+
+    return redirect('/tags')
